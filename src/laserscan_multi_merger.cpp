@@ -91,8 +91,8 @@ LaserscanMerger::LaserscanMerger() : Node("laserscan_multi_merger")
 
 	this->laserscan_topic_parser();
 
-	point_cloud_publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(cloud_destination_topic.c_str(), rclcpp::SensorDataQoS());
-	laser_scan_publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>(scan_destination_topic.c_str(), rclcpp::SensorDataQoS());
+	point_cloud_publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(cloud_destination_topic.c_str(), rclcpp::SystemDefaultsQoS());
+	laser_scan_publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>(scan_destination_topic.c_str(), rclcpp::SystemDefaultsQoS());
 }
 
 rcl_interfaces::msg::SetParametersResult LaserscanMerger::reconfigureCallback(const std::vector<rclcpp::Parameter> &parameters)
@@ -186,7 +186,7 @@ void LaserscanMerger::laserscan_topic_parser()
 			scan_subscribers.resize(input_topics.size());
 			clouds_modified.resize(input_topics.size());
 			clouds.resize(input_topics.size());
-			RCLCPP_INFO(this->get_logger(), "Subscribing to topics\t%ld", scan_subscribers.size());
+			RCLCPP_INFO(this->get_logger(), "Subscribing to %ld topics.", scan_subscribers.size());
 			for (std::vector<int>::size_type i = 0; i < input_topics.size(); ++i)
 			{
 				// workaround for std::bind https://github.com/ros2/rclcpp/issues/583
